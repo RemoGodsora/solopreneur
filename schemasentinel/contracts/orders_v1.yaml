@@ -1,0 +1,48 @@
+version: "1.0.0"
+dataset: "orders"
+description: "Core transactional stream contract for customer orders"
+enforcement_level: "strict" # strict (fail on drift), warn (log drift)
+
+schema:
+  columns:
+    - name: "order_id"
+      type: "VARCHAR"
+      nullable: false
+      unique: true
+      pattern: "^ORD-[0-9]{5}$"
+
+    - name: "customer_id"
+      type: "VARCHAR"
+      nullable: false
+
+    - name: "order_timestamp"
+      type: "TIMESTAMP"
+      nullable: false
+
+    - name: "status"
+      type: "VARCHAR"
+      nullable: false
+      allowed_values:
+        - "PENDING"
+        - "PROCESSING"
+        - "COMPLETED"
+        - "CANCELLED"
+
+    - name: "item_count"
+      type: "BIGINT"
+      nullable: false
+      min_value: 1
+
+    - name: "order_total"
+      type: "DOUBLE"
+      nullable: false
+      min_value: 0.01
+
+quality_rules:
+  - name: "valid_total_math"
+    sql: "order_total >= (item_count * 0.50)"
+    description: "Sanity check: average item price must be at least $0.50"
+
+  - name: "no_future_orders"
+    sql: "order_timestamp <= CURRENT_TIMESTAMP + INTERVAL 5 MINUTE"
+    description: "Prevent ingestion of timestamps clock-skewed into the future"

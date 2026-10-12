@@ -1,0 +1,39 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables & secrets
+.env
+*.env
+.env.*
+
+# Local data & temporary stores
+data/orders_corrupted.csv
+data/healed_view.sql
+*.duckdb
+*.duckdb.wal
+*.sqlite
+*.sqlite3
+*.db
+
+# Caches & test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Docker volumes / persistence
+streampulse/data/
