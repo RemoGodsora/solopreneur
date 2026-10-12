@@ -9,16 +9,16 @@ This studio repository houses three decoupled, production-grade technical produc
 
 | System | Core Problem Addressed | Key Architecture & Stack | Verification Status |
 | :--- | :--- | :--- | :--- |
-| **[Solo AI Studio](./solo-ai-engine/)** | Multi-tenant LLM token abuse, lack of auditability, and vendor lock-in | FastAPI, SQLite, Token Bucket Algorithms, Groq Cloud, Tailwind UI | **Production Ready** |
+| **[Solo AI Engine](./solo-ai-engine/)** | Multi-tenant LLM token abuse, lack of auditability, and vendor lock-in | FastAPI, SQLite, Token Bucket Algorithms, Groq Cloud, Tailwind UI | **Production Ready** |
 | **[StreamPulse](./streampulse/)** | Telemetry alert fatigue, high throughput ingestion, and delayed incident triage | Redpanda (C++ Kafka), Redis Rolling Windows, $Z \ge 3.5\sigma$ Gating, SSE, Groq Triage | **Production Ready** |
 | **[SchemaSentinel](./schemasentinel/)** | Silent data pipeline failures and breaking schema drift in analytical warehouses | DuckDB, Pydantic v2, YAML Contracts, Self-Healing SQL Views, Typer/Rich CLI, GitHub Actions | **Production Ready** |
 
 ---
 
-## 1. Solo AI Studio ⚡
+## 1. Solo AI Engine ⚡
 **Multi-Tenant AI Governance Platform & Inference Gateway**
 
-Solo AI Studio provides a centralized, secure API gateway and management dashboard for multi-tenant organizations interacting with large language models. It enforces rate limits, manages token budgets per tenant, and logs auditable analytics.
+Solo AI Engine provides a centralized, secure API gateway and management dashboard for multi-tenant organizations interacting with large language models. It enforces rate limits, manages token budgets per tenant, and logs auditable analytics.
 
 * **Tenant Isolation**: Deterministic token-bucket rate limiting per API key to protect downstream model quotas.
 * **Low-Latency Inference**: Direct provider abstraction over Groq API with streaming responses.
