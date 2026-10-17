@@ -4,41 +4,33 @@ An enterprise-ready, multi-tenant asynchronous intelligence extraction platform.
 
 ---
 
+[![CI Pipeline](https://github.com/RemoGodsora/solo-ai-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/RemoGodsora/solo-ai-engine/actions/workflows/ci.yml)
+![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
+> **Live Walkthrough**: [Watch the 84-Second Architecture & Demo on YouTube](https://youtu.be/ST0TsyK9mrs) 📺
+
 ## High-Level Architecture
 
-```text
-[ Unstructured Text / Audio Transcripts ]
-                   │
-                   ▼
-┌────────────────────────────────────────────────────────┐
-│  FastAPI Application Gateway                           │
-│  - API Key Auth & Tenant Isolation                     │
-│  - Monthly Quota Enforcement (Rate Limiter / 429)      │
-└────────────┬───────────────────────────────┬───────────┘
-             │                               │
-    Synchronous Extraction          Async Agent Jobs
-             │                               │
-             ▼                               ▼
-┌───────────────────────────┐   ┌────────────────────────┐
-│ Groq LLM Inference        │   │ Background Reasoning   │
-│ - Strict Schema Extraction│   │ - Tool Calling Loop    │
-│ - Structured JSON Output  │   │ - Deterministic State  │
-└────────────┬──────────────┘   └────────────┬───────────┘
-             │                               │
-             └───────────────┬───────────────┘
-                             ▼
-              ┌─────────────────────────────┐
-              │ SQLite / aiosqlite Storage  │
-              │ - Organization Isolation    │
-              │ - Persistent Docker Mount   │
-              └──────────────┬──────────────┘
-                             ▼
-              ┌─────────────────────────────┐
-              │ Deliverable Synthesizer     │
-              │ - Executive Summaries       │
-              │ - Action Registers          │
-              │ - Print-Ready HTML / PDF    │
-              └─────────────────────────────┘
+```mermaid
+flowchart TD
+    A[Unstructured Text / Audio Transcripts] --> B[FastAPI Application Gateway]
+    B -->|Constant-Time SHA-256 Auth| C{Tenant Quota Check}
+    C -->|Quota Exceeded| D[HTTP 429 Rate Limit]
+    C -->|Within Budget| E[Route Selector]
+    
+    E -->|Synchronous Ingestion| F[Groq LLM Engine]
+    E -->|Background Jobs| G[Async Tool-Calling Worker]
+    
+    F -->|Validated Pydantic JSON| H[(SQLite / aiosqlite Storage)]
+    G -->|State & Tool Execution| H
+    
+    H --> I[Deliverable Synthesizer]
+    I --> J[Executive Summaries & Action Registers]
+    I --> K[Print-Ready CSS PDF Briefs]
+    H --> L[Async Operations Webhooks: Discord / Slack]
 ```
 
 ---
