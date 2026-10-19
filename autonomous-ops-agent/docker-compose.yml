@@ -1,0 +1,11 @@
+services:
+  autonomous-ops-agent:
+    build: .
+    container_name: autonomous-ops-agent
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
