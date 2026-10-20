@@ -1,97 +1,100 @@
+@'
 # One-Person Tech Studio 🚀
-> Three production-grade systems spanning AI governance, event-driven streaming reliability, and autonomous data contracts.
+> Autonomous, production-grade engineering assets spanning AI governance, event-driven streaming, data contracts, and operational state machines.
 
-This studio repository houses three decoupled, production-grade technical products designed to solve operational bottlenecks in real-time streaming, modern data pipelines, and multi-tenant AI systems.
+[![Repo](https://img.shields.io/badge/Monorepo-solopreneur-181717?logo=github)](https://github.com/RemoGodsora/solopreneur)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Containers-Docker%20Compose-2496ED?logo=docker)](https://docker.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
----
-
-## Portfolio Overview
-
-| System | Core Problem Addressed | Key Architecture & Stack | Verification Status |
-| :--- | :--- | :--- | :--- |
-| **[Solo AI Engine](./solo-ai-engine/)** | Multi-tenant LLM token abuse, lack of auditability, and vendor lock-in | FastAPI, SQLite, Token Bucket Algorithms, Groq Cloud, Tailwind UI | **Production Ready** |
-| **[StreamPulse](./streampulse/)** | Telemetry alert fatigue, high throughput ingestion, and delayed incident triage | Redpanda (C++ Kafka), Redis Rolling Windows, $Z \ge 3.5\sigma$ Gating, SSE, Groq Triage | **Production Ready** |
-| **[SchemaSentinel](./schemasentinel/)** | Silent data pipeline failures and breaking schema drift in analytical warehouses | DuckDB, Pydantic v2, YAML Contracts, Self-Healing SQL Views, Typer/Rich CLI, GitHub Actions | **Production Ready** |
+This repository serves as the central monorepo for a one-person digital systems studio. Each directory contains an independent, containerized, test-covered production service designed to solve high-friction operational and infrastructure bottlenecks.
 
 ---
 
-## 1. Solo AI Engine ⚡
-**Multi-Tenant AI Governance Platform & Inference Gateway**
+## Flagship Studio Systems
 
-Solo AI Engine provides a centralized, secure API gateway and management dashboard for multi-tenant organizations interacting with large language models. It enforces rate limits, manages token budgets per tenant, and logs auditable analytics.
+| # | System | Core Architecture & Stack | Primary Problem Solved | Status |
+| :-: | :--- | :--- | :--- | :-: |
+| **01** | [**Solo AI Engine**](./solo-ai-engine) | **FastAPI, SQLite (async), Groq, Pydantic v2, Docker** | Uncontrolled LLM token consumption, lack of tenant quota enforcement, and unvalidated outputs in agency workflows. | `Production` |
+| **02** | [**StreamPulse**](./streampulse) | **Redpanda (Kafka C++), Redis ZSET, FastAPI SSE, Groq** | Alert fatigue and static threshold failures in high-throughput telemetry; automated $Z \ge 3.5\sigma$ anomaly triage. | `Production` |
+| **03** | [**SchemaSentinel**](./schemasentinel) | **DuckDB, Pydantic, Typer CLI, Python AST** | Downstream pipeline breakage from upstream schema drift; automated in-memory contract validation and self-healing SQL views. | `Production` |
+| **04** | [**Autonomous Ops Agent**](./autonomous-ops-agent) | **LangGraph, DuckDB, Groq, Webhooks, FastAPI** | Repetitive financial reconciliation; deterministic state-graph pipeline with human-in-the-loop pause gates and SHA-256 audit seals. | `Production` |
 
-* **Tenant Isolation**: Deterministic token-bucket rate limiting per API key to protect downstream model quotas.
-* **Low-Latency Inference**: Direct provider abstraction over Groq API with streaming responses.
-* **Usage Telemetry**: In-memory and persisted SQLite usage tracking for prompt tokens, completion tokens, and dollar expenditures.
-* **Console Dashboard**: Zero-framework, responsive client interface for real-time tenant provisioning and quota monitoring.
+---
 
-```bash
-cd solo-ai-engine
-python -m venv venv && .\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+## Architecture Overview
+
+```mermaid
+flowchart TD
+    subgraph Layer1["01. AI Gateway & Ingestion"]
+        A[Inbound Prompts / Transcripts] --> B[Solo AI Engine]
+        B -->|SHA-256 Auth & Quota Check| C[(SQLite / Storage)]
+        B -->|Deterministic PDF Output| D[Executive Briefs]
+    end
+
+    subgraph Layer2["02. Real-Time Telemetry & Streaming"]
+        E[High-Throughput Metric Stream] --> F[Redpanda Broker]
+        F --> G[Redis 30s Sliding Window]
+        G -->|Z >= 3.5 sigma Spike| H[StreamPulse SRE Diagnostic]
+        H -->|Server-Sent Events| I[Live SSE Incident Visualizer]
+    end
+
+    subgraph Layer3["03. Data Governance & Pipelines"]
+        J[Upstream Drifted CSV / JSON] --> K[SchemaSentinel Validator]
+        K -->|DuckDB In-Memory AST| L{Contract Check}
+        L -->|Breach Detected| M[Autonomous SQL View Synthesis]
+    end
+
+    subgraph Layer4["04. Autonomous Digital Labor"]
+        N[Raw Vendor Invoices] --> O[Autonomous Ops Agent]
+        O -->|LangGraph State Machine| P[DuckDB Purchase Order Check]
+        P -->|Variance > $500| Q[HITL Pause Gate: Webhook Alert]
+        Q -->|Operator Signoff| R[SHA-256 Sealed Audit Certificate]
+    end
 ```
 
----
-
-## 2. StreamPulse 📊
-**High-Throughput Telemetry Broker & Automated Incident Triage Engine**
-
-StreamPulse tackles alert fatigue in distributed architectures. It ingests thousands of telemetry events per second, calculates real-time rolling statistical distributions in Redis, filters noise using standard deviation thresholds, and routes true anomalies to an LLM triage engine.
-
-* **Distributed Ingestion**: Redpanda streaming cluster handling high-volume event ingestion without JVM overhead.
-* **Statistical Filtering**: Redis Sorted Sets (`ZSET`) maintaining sliding 30-second windows; only telemetry events breaching $Z \ge 3.5\sigma$ trigger alert routing.
-* **Hybrid Diagnostic Engine**: Automated triage combining semantic LLM diagnostics with local heuristic rule fallbacks for sub-second MTTR.
-* **Live Incident Streaming**: Server-Sent Events (SSE) pipe pushing critical incidents to an operations HUD.
-
-```bash
-cd streampulse
-docker compose up -d
-python producer.py --rate 100 --anomaly-interval 20
-python consumer.py
-uvicorn api.main:app --reload --port 8001
-```
-
----
-
-## 3. SchemaSentinel 🛡️
-**Autonomous Data Contracts & Self-Healing Analytical Engine**
-
-SchemaSentinel prevents pipeline breakage caused by upstream schema alterations (column renaming, type drift, null injections). It validates batch datasets against declarative YAML contracts using DuckDB and dynamically generates self-healing SQL migration views.
-
-* **Vectorized Analytical Validation**: DuckDB in-memory validation engine executing type checks, regex matching, and custom SQL rules directly on CSV/Parquet files without loading data into memory.
-* **Self-Healing Synthesis**: Identifies schema drift (e.g., `user_uuid` replacing `customer_id`), binds missing columns, sanitizes uncontracted enums, and synthesizes non-destructive SQL adapter views (`CREATE VIEW v_dataset_healed`).
-* **CI/CD Quality Gate**: Command-line interface (`schemasentinel test`) and GitHub Actions workflow to block breaking schema migrations prior to pull request merges.
-
-```bash
-cd schemasentinel
-python data/generate_samples.py
-python cli/main.py test --contract contracts/orders_v1.yaml --data data/orders_clean.csv
-python cli/main.py heal --contract contracts/orders_v1.yaml --data data/orders_corrupted.csv
-pytest -v
-```
-
----
-
-## Studio Directory Layout
-
-```text
+## Directory Navigation
+```Plaintext
 solopreneur/
-├── README.md                      # Studio portfolio hub
-├── solo-ai-engine/                # Product #1: AI Gateway & Governance
-│   ├── app/
-│   ├── database/
-│   ├── static/
-│   └── main.py
-├── streampulse/                   # Product #2: Real-Time Event Analytics
-│   ├── docker-compose.yml
-│   ├── producer.py
-│   ├── consumer.py
-│   └── api/
-└── schemasentinel/                # Product #3: Data Contracts & Remediation
-    ├── contracts/
-    ├── core/
-    ├── cli/
-    ├── tests/
-    └── .github/workflows/
+├── solo-ai-engine/           # Product #1: Multi-tenant AI governance & inference proxy
+│   ├── main.py               # Gateway endpoints, quota middleware & telemetry
+│   ├── database.py           # Async SQLAlchemy ORM models & tenant entities
+│   └── templates/            # Print-ready CSS brief & governance dashboard
+│
+├── streampulse/              # Product #2: Event-driven telemetry & anomaly triage
+│   ├── producer.py           # High-throughput synthetic telemetry generator
+│   ├── consumer.py           # Sliding-window statistical filter & Groq attribution
+│   └── api/                  # FastAPI SSE streaming gateway & incident dashboard
+│
+├── schemasentinel/           # Product #3: Autonomous data contracts & self-healing SQL
+│   ├── cli/main.py           # Typer CLI for validation and AST healing
+│   ├── core/validator.py     # DuckDB SQL rule evaluator
+│   └── core/healer.py        # Deterministic schema adapter generator
+│
+└── autonomous-ops-agent/     # Product #4: Graph-based reconciliation agent
+    ├── core/graph.py         # LangGraph cyclical state machine & safety barriers
+    ├── tools/ledger.py       # DuckDB PO cross-examination tool
+    └── api/gateway.py        # Webhook listeners & review resumption endpoints
 ```
+
+## Unified Local Verification
+
+All four systems feature isolated virtual environments, comprehensive Pytest test suites, and Docker Compose configurations.   
+
+```Bash
+# Verify System #1 (Solo AI Engine)
+cd solo-ai-engine && pytest -v
+
+# Verify System #2 (StreamPulse)
+cd ../streampulse && docker compose up -d
+
+# Verify System #3 (SchemaSentinel)
+cd ../schemasentinel && python -m cli.main --contract contracts/orders_v1.yaml --data data/orders_corrupted.csv
+
+# Verify System #4 (Autonomous Ops Agent)
+cd ../autonomous-ops-agent && pytest -v
+```
+
+## License
+MIT License. Engineered and maintained by @[RemoGodsora](https://www.google.com/search?q=https://github.com/RemoGodsora).
